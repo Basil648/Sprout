@@ -1,0 +1,165 @@
+/* ====================== */
+/*   PARALLAX HERO        */
+/* ====================== */
+.contact-hero {
+  height: 60vh;
+  background-image: url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.contact-hero-overlay {
+  backdrop-filter: brightness(0.4);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.contact-title {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.contact-subtitle {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+
+
+/* ====================== */
+/*       FORM SECTION     */
+/* ====================== */
+.contact-form-section {
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-form-container {
+  background-color: #ffffff;
+  padding: 40px 50px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+}
+
+.form-header {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3f3f3f;
+  margin-bottom: 8px;
+}
+
+.form-subtext {
+  color: #6a6a6a;
+  margin-bottom: 30px;
+}
+
+
+/* ====================== */
+/*   FLOATING INPUTS      */
+/* ====================== */
+
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input,
+.floating-group textarea {
+  width: 100%;
+  padding: 16px 14px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font-size: 15px;
+  background: none;
+  outline: none;
+  resize: none;
+}
+
+.floating-group label {
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  background-color: white;
+  padding: 0 6px;
+  color: #8a8a8a;
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.floating-group input:focus + label,
+.floating-group textarea:focus + label,
+.floating-group input:not(:placeholder-shown) + label,
+.floating-group textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  font-size: 12px;
+  color: #A67C52;
+}
+
+
+
+/* ====================== */
+/*      SUBMIT BUTTON     */
+/* ====================== */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #3C2F2F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.submit-btn:hover {
+  background-color: #2B2222;
+}
+
+
+
+/* ====================== */
+/*   SCROLL REVEAL ANIM   */
+/* ====================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.9s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+/* ====================== */
+/*       RESPONSIVE       */
+/* ====================== */
+@media (max-width: 600px) {
+  .contact-title {
+    font-size: 2.4rem;
+  }
+
+  .contact-form-container {
+    padding: 30px 25px;
+  }
+}
