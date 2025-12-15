@@ -13,7 +13,7 @@ import inquiryRoutes from "./routes/inquiryRoutes.js";
 
 import paymentRoutes from "./routes/paymentRoutes.js";
 import returnRoutes from "./routes/returnRoutes.js";
-
+import simpleSearchRoutes from "./routes/simpleSearchRoutes.js";
 
 connectDB();
 
@@ -37,6 +37,7 @@ app.use("/api/billing", billingRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/return", returnRoutes);
+app.use("/api/search", simpleSearchRoutes);
 
 
 app.get("/", (req, res) => {

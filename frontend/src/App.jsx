@@ -24,6 +24,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ReturnForm from "./pages/ReturnForm";
 import ForgotPassword from "./pages/ForgotPassword";
+import SearchPage from "./pages/SearchPage";
+
 
 
 
@@ -43,6 +45,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/search" element={<SearchPage />} />
 
 
           {/* PROTECTED ROUTES */}
