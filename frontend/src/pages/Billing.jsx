@@ -1,3 +1,4 @@
+
 // import { useEffect, useState } from "react";
 // import api from "../api/axios";
 // import { useNavigate } from "react-router-dom";
@@ -22,37 +23,37 @@
 //   useEffect(() => {
 //     loadBilling();
 //     loadCart();
+//     window.scrollTo(0, 0);
 //   }, []);
 
+//   // LOAD BILLING
 //   const loadBilling = async () => {
 //     try {
 //       const res = await api.get("/billing", {
 //         headers: { Authorization: `Bearer ${token}` },
 //       });
 //       if (res.data) setBilling(res.data);
-//     } catch (err) {
-//       console.log("Billing load failed:", err);
-//     }
+//     } catch (err) { }
 //   };
 
+//   // LOAD CART
 //   const loadCart = async () => {
 //     try {
 //       const res = await api.get("/cart", {
 //         headers: { Authorization: `Bearer ${token}` },
 //       });
 //       setCart(res.data);
-//     } catch (err) {
-//       console.log("Cart fetch failed:", err);
-//     }
+//     } catch (err) { }
 //   };
 
-//   const totalAmount = cart
-//     ? cart.items.reduce(
-//       (total, item) => total + item.productId.price * item.quantity,
-//       0
-//     )
-//     : 0;
+//   if (!cart) return <p>Loading…</p>;
 
+//   const totalAmount = cart.items.reduce(
+//     (sum, item) => sum + item.productId.price * item.quantity,
+//     0
+//   );
+
+//   // COD ORDER
 //   const handleCOD = async () => {
 //     const items = cart.items.map((i) => ({
 //       productId: i.productId._id,
@@ -69,10 +70,10 @@
 //       headers: { Authorization: `Bearer ${token}` },
 //     });
 
-//     alert("Order placed with COD!");
 //     navigate("/customer");
 //   };
 
+//   // STRIPE ONLINE PAYMENT
 //   const handleOnlinePayment = async () => {
 //     const items = cart.items.map((i) => ({
 //       name: i.productId.name,
@@ -86,13 +87,15 @@
 //         { items },
 //         { headers: { Authorization: `Bearer ${token}` } }
 //       );
-//       window.location.href = res.data.url;
+
+//       window.location.href = res.data.url; // THE REDIRECT YOU WANTED
 //     } catch (err) {
-//       alert("Payment failed: " + (err.response?.data?.error || err.message));
+//       alert(err.response?.data?.error || err.message);
 //     }
 //   };
 
 //   const handleProceed = async () => {
+//     // Save billing details
 //     await api.post("/billing", billing, {
 //       headers: { Authorization: `Bearer ${token}` },
 //     });
@@ -101,157 +104,225 @@
 //     else handleOnlinePayment();
 //   };
 
-//   if (!cart) return <p>Loading…</p>;
-
 //   return (
 //     <div
 //       style={{
-//         backgroundColor: "#F7F7F2",
 //         minHeight: "100vh",
-//         padding: "35px",
+//         width: "100%",
+//         backgroundColor: "#FAFAF9",
+//         padding: "40px 20px",
 //         fontFamily: "Poppins",
+//         display: "flex",
+//         justifyContent: "center",
 //       }}
 //     >
-//       <div className="container">
+//       <div
+//         style={{
+//           width: "100%",
+//           maxWidth: "1100px",
+//           display: "grid",
+//           gap: "40px",
 
-//         <h2
-//           className="fw-bold mb-4 text-center"
-//           style={{ color: "#8FAF9F", letterSpacing: "1px" }}
-//         >
-//           CHECKOUT
-//         </h2>
+//           // ⭐ Desktop — 2 columns
+//           gridTemplateColumns: "1fr 420px",
 
-//         <div className="row g-4">
+//           // ⭐ Responsive fix
+//           ...(window.innerWidth <= 768 && {
+//             gridTemplateColumns: "1fr",
+//           }),
+//         }}
+//       >
 
-//           {/* LEFT SECTION — BILLING FORM */}
-//           <div className="col-md-7">
-//             <div
-//               className="shadow-sm p-4 bg-white rounded"
-//               style={{ borderLeft: "5px solid #8FAF9F" }}
-//             >
-//               <h4 className="fw-semibold" style={{ color: "#8FAF9F" }}>
-//                 BILLING INFORMATION
-//               </h4>
+//         {/* LEFT SIDE — BILLING FORM */}
+//         < div >
+//           <h2
+//             style={{
+//               marginBottom: "25px",
+//               fontWeight: "800",
+//               color: "#2B2B2B",
+//               letterSpacing: "0.5px",
+//             }}
+//           >
+//             Checkout
+//           </h2>
 
-//               <div className="mt-3">
-
-//                 {[
-//                   "fullName",
-//                   "phone",
-//                   "address",
-//                   "city",
-//                   "state",
-//                   "postalCode",
-//                 ].map((field) => (
-//                   <input
-//                     key={field}
-//                     placeholder={field.replace(/([A-Z])/g, " $1").toUpperCase()}
-//                     value={billing[field]}
-//                     onChange={(e) =>
-//                       setBilling({ ...billing, [field]: e.target.value })
-//                     }
-//                     className="form-control mb-3"
-//                     style={{
-//                       padding: "12px",
-//                       borderRadius: "8px",
-//                       border: "1px solid #d0d0d0",
-//                     }}
-//                   />
-//                 ))}
-
-//               </div>
-
-//               <h5 className="fw-semibold mt-4" style={{ color: "#8FAF9F" }}>
-//                 PAYMENT METHOD
-//               </h5>
-
-//               <div className="mt-2">
-//                 <label className="d-flex align-items-center gap-2 mb-2">
-//                   <input
-//                     type="radio"
-//                     checked={paymentMethod === "cod"}
-//                     value="cod"
-//                     onChange={(e) => setPaymentMethod(e.target.value)}
-//                   />
-//                   Cash on Delivery
-//                 </label>
-
-//                 <label className="d-flex align-items-center gap-2">
-//                   <input
-//                     type="radio"
-//                     checked={paymentMethod === "online"}
-//                     value="online"
-//                     onChange={(e) => setPaymentMethod(e.target.value)}
-//                   />
-//                   Pay Online (Stripe)
-//                 </label>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* RIGHT SECTION — ORDER SUMMARY */}
-//           <div className="col-md-5">
-//             <div
-//               className="shadow-sm p-4 bg-white rounded"
+//           <div style={{ marginBottom: "35px" }}>
+//             <h4
 //               style={{
-//                 borderLeft: "5px solid #8FAF9F",
-//                 position: "sticky",
-//                 top: "20px",
+//                 fontWeight: "700",
+//                 marginBottom: "15px",
+//                 color: "#2B2B2B",
 //               }}
 //             >
-//               <h4 className="fw-semibold" style={{ color: "#8FAF9F" }}>
-//                 ORDER SUMMARY
-//               </h4>
+//               Billing Details
+//             </h4>
 
-//               {cart.items.map((item) => (
-//                 <div
-//                   key={item.productId._id}
-//                   className="p-3 mt-3 rounded"
+//             {[
+//               "fullName",
+//               "phone",
+//               "address",
+//               "city",
+//               "state",
+//               "postalCode",
+//             ].map((field) => (
+//               <input
+//                 key={field}
+//                 placeholder={field.replace(/([A-Z])/g, " $1")}
+//                 value={billing[field]}
+//                 onChange={(e) =>
+//                   setBilling({ ...billing, [field]: e.target.value })
+//                 }
+//                 style={{
+//                   width: "100%",
+//                   padding: "14px",
+//                   marginBottom: "15px",
+//                   borderRadius: "6px",
+//                   border: "1px solid #E3E3E3",
+//                   fontSize: "14px",
+//                   backgroundColor: "#FFFFFF",
+//                 }}
+//               />
+//             ))}
+//           </div>
+
+//           <div style={{ marginTop: "30px" }}>
+//             <h4
+//               style={{
+//                 fontWeight: "700",
+//                 marginBottom: "15px",
+//                 color: "#2B2B2B",
+//               }}
+//             >
+//               Payment Method
+//             </h4>
+
+//             <div
+//               style={{
+//                 display: "flex",
+//                 gap: "15px",
+//               }}
+//             >
+//               {/* ONLINE PAYMENT CARD */}
+//               <div
+//                 onClick={() => setPaymentMethod("online")}
+//                 style={{
+//                   flex: 1,
+//                   padding: "15px 20px",
+//                   borderRadius: "10px",
+//                   border: paymentMethod === "online"
+//                     ? "2px solid #000"
+//                     : "1px solid #DDD",
+//                   backgroundColor: paymentMethod === "online"
+//                     ? "#F2F2F2"
+//                     : "#FFF",
+//                   cursor: "pointer",
+//                   transition: "0.25s",
+//                 }}
+//               >
+//                 <p
 //                   style={{
-//                     backgroundColor: "#F2F5F3",
-//                     borderLeft: "4px solid #8FAF9F",
+//                     margin: 0,
+//                     fontWeight: "700",
+//                     fontSize: "16px",
+//                     color: "#333",
 //                   }}
 //                 >
-//                   <p className="fw-bold mb-1">{item.productId.name}</p>
-//                   <p className="text-secondary mb-0">
-//                     ₹{item.productId.price} × {item.quantity}
-//                   </p>
-//                   <p className="fw-bold mt-2 text-success">
-//                     Subtotal: ₹{item.productId.price * item.quantity}
-//                   </p>
-//                 </div>
-//               ))}
-
-//               <hr />
-
-//               <div className="d-flex justify-content-between mb-2">
-//                 <h5>Total</h5>
-//                 <h5 className="text-success">₹{totalAmount}</h5>
+//                   Pay Online
+//                 </p>
+//                 <p style={{ fontSize: "13px", color: "#666", marginTop: "5px" }}>
+//                   Secure payment with Stripe
+//                 </p>
 //               </div>
-
-//               <button
-//                 className="btn w-100 mt-3"
-//                 style={{
-//                   backgroundColor: "#8FAF9F",
-//                   color: "white",
-//                   padding: "12px",
-//                   borderRadius: "10px",
-//                   letterSpacing: "1px",
-//                 }}
-//                 onClick={handleProceed}
-//               >
-//                 {paymentMethod === "cod"
-//                   ? "PLACE ORDER"
-//                   : "PROCEED TO PAYMENT"}
-//               </button>
 //             </div>
 //           </div>
 
 //         </div>
-//       </div>
-//     </div>
+
+//         {/* RIGHT SIDE — ORDER SUMMARY */}
+//         <div
+//           style={{
+//             backgroundColor: "#FFFFFF",
+//             padding: "25px",
+//             borderRadius: "10px",
+//             border: "1px solid #EAEAEA",
+//             height: "fit-content",
+//             marginTop: "360px",
+//           }}
+//         >
+//           <h4
+//             style={{
+//               fontWeight: "700",
+//               marginBottom: "20px",
+//               color: "#2B2B2B",
+//             }}
+//           >
+//             Order Summary
+//           </h4>
+
+//           {cart.items.map((item) => (
+//             <div
+//               key={item.productId._id}
+//               style={{
+//                 display: "flex",
+//                 justifyContent: "space-between",
+//                 marginBottom: "20px",
+//                 paddingBottom: "15px",
+//                 borderBottom: "1px solid #EFEFEF",
+//               }}
+//             >
+//               <div>
+//                 <p style={{ margin: 0, fontWeight: "600" }}>
+//                   {item.productId.name}
+//                 </p>
+//                 <p style={{ margin: 0, fontSize: "14px", color: "#777" }}>
+//                   ₹{item.productId.price} × {item.quantity}
+//                 </p>
+//               </div>
+
+//               <p style={{ fontWeight: "700", margin: 0 }}>
+//                 ₹{item.productId.price * item.quantity}
+//               </p>
+//             </div>
+//           ))}
+
+//           {/* TOTAL */}
+//           <div
+//             style={{
+//               display: "flex",
+//               justifyContent: "space-between",
+//               marginTop: "10px",
+//               marginBottom: "25px",
+//             }}
+//           >
+//             <h5 style={{ fontWeight: "700", margin: 0 }}>Total</h5>
+//             <h5 style={{ fontWeight: "700", margin: 0 }}>₹{totalAmount}</h5>
+//           </div>
+
+//           {/* PAY BUTTON */}
+//           <button
+//             onClick={handleProceed}
+//             style={{
+//               width: "100%",
+//               padding: "15px",
+//               backgroundColor: "#000",
+//               color: "white",
+//               fontWeight: "700",
+//               borderRadius: "6px",
+//               letterSpacing: "1px",
+//               border: "none",
+//               marginTop: "10px",
+//             }}
+//           >
+//             {paymentMethod === "cod"
+//               ? "Place Order"
+//               : "Proceed to Online Payment"}
+//           </button>
+//         </div>
+//       </div >
+//     </div >
 //   );
 // }
+
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -270,7 +341,7 @@ export default function Billing() {
     country: "India",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("online");
   const [cart, setCart] = useState(null);
 
   useEffect(() => {
@@ -315,7 +386,7 @@ export default function Billing() {
 
     await api.post(
       "/orders",
-      { items },
+      { items, paymentMethod: "COD" },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -337,11 +408,11 @@ export default function Billing() {
     try {
       const res = await api.post(
         "/payment/create-checkout-session",
-        { items },
+        { items, paymentMethod: "Online" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      window.location.href = res.data.url; // THE REDIRECT YOU WANTED
+      window.location.href = res.data.url;
     } catch (err) {
       alert(err.response?.data?.error || err.message);
     }
@@ -367,9 +438,45 @@ export default function Billing() {
         fontFamily: "Poppins",
         display: "flex",
         justifyContent: "center",
+        opacity: 0,
+        animation: "fadeIn 0.6s ease forwards",
       }}
     >
+      {/* ANIMATIONS + RESPONSIVE CSS */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+
+          @media (max-width: 768px) {
+            .checkout-grid {
+              grid-template-columns: 1fr !important;
+            }
+            .order-summary {
+              margin-top: 20px !important;
+              position: relative !important;
+              top: 0 !important;
+            }
+          }
+
+          @media (min-width: 769px) {
+            .order-summary {
+              position: sticky;
+              top: 120px;
+              transition: 0.3s;
+            }
+            .order-summary:hover {
+              transform: translateY(-4px);
+            }
+          }
+        `}
+      </style>
+
+      {/* GRID */}
       <div
+        className="checkout-grid"
         style={{
           width: "100%",
           maxWidth: "1100px",
@@ -391,6 +498,7 @@ export default function Billing() {
             Checkout
           </h2>
 
+          {/* BILLING DETAILS */}
           <div style={{ marginBottom: "35px" }}>
             <h4
               style={{
@@ -430,62 +538,64 @@ export default function Billing() {
             ))}
           </div>
 
-          <div>
-            <h4
-              style={{
-                fontWeight: "700",
-                marginBottom: "10px",
-                color: "#2B2B2B",
-              }}
-            >
+          {/* PAYMENT METHOD */}
+          <div style={{ marginTop: "30px" }}>
+            <h4 style={{ fontWeight: "700", marginBottom: "15px" }}>
               Payment Method
             </h4>
 
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginBottom: "10px",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="radio"
-                value="cod"
-                checked={paymentMethod === "cod"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              Cash on Delivery
-            </label>
-
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="radio"
-                value="online"
-                checked={paymentMethod === "online"}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              Pay Online (Stripe)
-            </label>
+            <div style={{ display: "flex", gap: "15px" }}>
+              {/* ONLINE PAYMENT CARD */}
+              <div
+                onClick={() => setPaymentMethod("online")}
+                style={{
+                  flex: 1,
+                  padding: "15px 20px",
+                  borderRadius: "10px",
+                  border:
+                    paymentMethod === "online"
+                      ? "2px solid #000"
+                      : "1px solid #DDD",
+                  backgroundColor:
+                    paymentMethod === "online" ? "#F2F2F2" : "#FFF",
+                  cursor: "pointer",
+                  transition: "0.25s",
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: "700",
+                    fontSize: "16px",
+                    color: "#333",
+                  }}
+                >
+                  Pay Online
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#666",
+                    marginTop: "5px",
+                  }}
+                >
+                  Secure payment with Stripe
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* RIGHT SIDE — ORDER SUMMARY */}
         <div
+          className="order-summary"
           style={{
             backgroundColor: "#FFFFFF",
             padding: "25px",
             borderRadius: "10px",
             border: "1px solid #EAEAEA",
             height: "fit-content",
+            transition: "0.3s ease",
           }}
         >
           <h4
@@ -518,7 +628,7 @@ export default function Billing() {
                 </p>
               </div>
 
-              <p style={{ fontWeight: "700", margin: 0 }}>
+              <p style={{ margin: 0, fontWeight: "700" }}>
                 ₹{item.productId.price * item.quantity}
               </p>
             </div>
@@ -552,9 +662,7 @@ export default function Billing() {
               marginTop: "10px",
             }}
           >
-            {paymentMethod === "cod"
-              ? "Place Order"
-              : "Proceed to Online Payment"}
+            Proceed to Online Payment
           </button>
         </div>
       </div>
